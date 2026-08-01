@@ -1,74 +1,80 @@
-Language: **English** | [Українська](README.uk.md)
+Мова: **Українська** | [English](README.en.md)
 
-# OldMaps.com.ua Magic Controls
+# OldMaps.com.ua Magic Tools
 
-A Chrome extension (Manifest V3) that adds an extra "Advanced settings" panel to the
-dual map viewer on [oldmaps.com.ua](https://oldmaps.com.ua) — the site that lets you
-compare historical maps of Ukrainian cities side by side with a modern map/satellite
-view.
+Розширення для Chrome (Manifest V3), яке додає додаткову панель "Розширені
+налаштування" до перегляду карт на [oldmaps.com.ua](https://oldmaps.com.ua) — сайті,
+що дозволяє порівнювати історичні карти українських міст поруч із сучасною картою
+чи супутниковим знімком.
 
-## Features
+## Можливості
 
-The extension adds a magic-wand button next to the site's own info/home buttons
-(top-right of the viewer). Clicking it opens a settings panel:
+Розширення додає кнопку у вигляді чарівної палички поруч із власними кнопками сайту
+"інформація"/"додому" (у правому верхньому куті перегляду карт). Клік по ній відкриває
+панель налаштувань:
 
-- **Показати центр** — toggles the red crosshair marker in the center of each map.
-  On by default, matching the site's own behavior.
+- **Показати центр** — вмикає/вимикає червоний хрестик у центрі кожної карти.
+  За замовчуванням увімкнено, як і в самому сайті.
 
-- **Вигляд мапи** — switches between two view modes:
-  - **Одна біля одної** (default) — the site's normal side-by-side layout.
-  - **На ввесь екран** — overlays both maps on top of each other across the full
-    viewer area, with the left map rendered above the right map. The two maps stay
-    perfectly aligned since they're kept in sync by the site's own code
-    (`leftmap.sync(rightmap)`); the extension just resizes both containers to the
-    same full-size rect and tells Leaflet to redraw (`invalidateSize()`).
+- **Вигляд мапи** — перемикає між двома режимами перегляду:
+  - **Одна біля одної** (за замовчуванням) — звичайний вигляд сайту, карти поруч.
+  - **На ввесь екран** — накладає обидві карти одна на одну на всю область
+    перегляду, ліва карта відображається поверх правої. Карти залишаються ідеально
+    вирівняними, оскільки вони синхронізуються власним кодом сайту
+    (`leftmap.sync(rightmap)`); розширення лише змінює розмір обох контейнерів до
+    однакового повноекранного прямокутника і каже Leaflet перемалюватися
+    (`invalidateSize()`).
 
-- **Прозорість** — appears only in overlay mode. A 0–100% slider that controls the
-  opacity of the top (left) map's tiles, so you can fade it out to reveal the map
-  underneath and visually compare the two layers at the same location.
+- **Прозорість** — з'являється лише в режимі "На ввесь екран". Повзунок від 0 до
+  100%, що керує прозорістю тайлів верхньої (лівої) карти, аби можна було
+  "приглушити" її та побачити карту під нею, порівнюючи обидва шари в тому самому
+  місці.
 
-In overlay mode, the two layer-picker buttons and the two attribution/credit panels
-(normally one per map) are repositioned so both are visible and stacked — the
-control belonging to the top map above the one belonging to the bottom map — instead
-of one being hidden behind the other.
+У режимі "На ввесь екран" дві кнопки вибору шару та дві панелі з інформацією про
+джерело карти (зазвичай по одній на кожну карту) переміщуються так, щоб обидві були
+видимі й розташовані одна над одною — елемент керування верхньої карти над елементом
+керування нижньої — замість того, щоб один ховався за іншим.
 
-## Installation (unpacked)
+## Встановлення (розпакований додаток)
 
-1. Open `chrome://extensions` in Chrome.
-2. Enable **Developer mode** (top-right toggle).
-3. Click **Load unpacked** and select this folder.
-4. Open any map-viewer page on oldmaps.com.ua (e.g.
+1. Відкрийте `chrome://extensions` у Chrome.
+2. Увімкніть **Режим розробника** (перемикач у правому верхньому куті).
+3. Натисніть **Завантажити розпакований додаток** і виберіть цю папку.
+4. Відкрийте будь-яку сторінку перегляду карт на oldmaps.com.ua (наприклад,
    `https://oldmaps.com.ua/lviv/?leftmap=200866&rightmap=google`).
 
-## Files
+## Файли
 
-- `manifest.json` — extension manifest (Manifest V3).
-- `content.js` — builds the settings panel and implements the view-mode/opacity/
-  center-marker logic.
-- `content.css` — styling for the panel and button, plus the overlay-mode layout
-  overrides.
+- `manifest.json` — маніфест розширення (Manifest V3).
+- `content.js` — будує панель налаштувань і реалізує логіку режиму перегляду,
+  прозорості та центрального маркера.
+- `content.css` — стилі для панелі й кнопки, а також перевизначення вигляду для
+  режиму накладання.
 
-## Implementation notes
+## Технічні примітки
 
-- The content script runs in the page's **MAIN world** (`"world": "MAIN"` in
-  `manifest.json`), not Chrome's default isolated world. This is required because
-  the logic needs direct access to the page's own global Leaflet map instances
-  (`window.leftmap`, `window.rightmap`, `window.layersleft`, `window.layersright`) —
-  those aren't reachable from an isolated content script.
-- `#leftmap` and `#rightmap` each create their own CSS stacking context, so once
-  both are resized to the same full-size rect in overlay mode, a control living
-  inside `#rightmap` can never render above `#leftmap`'s opaque tiles no matter its
-  `z-index`. The layer-picker and attribution controls are therefore detached from
-  their original map container and re-parented to `document.body` while overlay mode
-  is active (and moved back on switching to side-by-side), so they can be
-  positioned and stacked independently.
-- The site applies some of its own styling to controls via ancestor-scoped selectors
-  (e.g. `.leaflet-container .leaflet-control-attribution`) and CSS inheritance (the
-  attribution's font comes from `.leaflet-container`'s `font` shorthand). Once an
-  element is detached from its map container those rules stop matching, so the
-  extension re-declares the equivalent styling directly.
-- `.leaflet-container` (i.e. `#leftmap`) has its own opaque `background: #ddd`,
-  separate from the tile pane. The opacity slider fades only the tile pane
-  (`.leaflet-map-pane`), so `#leftmap`'s own background is also forced transparent
-  in overlay mode — otherwise it stays opaque behind the faded tiles and blocks
-  `#rightmap` from showing through.
+- Content script виконується в **основному ("MAIN") контексті** сторінки
+  (`"world": "MAIN"` у `manifest.json`), а не в ізольованому контексті Chrome за
+  замовчуванням. Це потрібно, бо логіці необхідний прямий доступ до власних
+  глобальних об'єктів карт Leaflet сторінки (`window.leftmap`, `window.rightmap`,
+  `window.layersleft`, `window.layersright`) — вони недоступні з ізольованого
+  content script.
+- `#leftmap` і `#rightmap` кожен створює власний CSS stacking context, тож коли обидва
+  змінюють розмір до однакового повноекранного прямокутника в режимі накладання,
+  елемент керування всередині `#rightmap` ніколи не зможе відобразитися поверх
+  непрозорих тайлів `#leftmap`, незалежно від його `z-index`. Тому кнопки вибору шару
+  та панелі атрибуції від'єднуються від свого початкового контейнера карти й
+  переносяться в `document.body`, поки активний режим накладання (і повертаються назад
+  при перемиканні на "Одна біля одної"), щоб їх можна було позиціонувати й
+  розташовувати незалежно.
+- Сайт застосовує частину власних стилів до елементів керування через селектори,
+  прив'язані до предка (наприклад, `.leaflet-container .leaflet-control-attribution`),
+  та через успадкування CSS (шрифт атрибуції походить від скороченого запису `font`
+  у `.leaflet-container`). Коли елемент від'єднується від свого контейнера карти, ці
+  правила перестають діяти, тож розширення повторно оголошує еквівалентні стилі
+  напряму.
+- `.leaflet-container` (тобто `#leftmap`) має власний непрозорий
+  `background: #ddd`, окремий від панелі тайлів. Повзунок прозорості приглушує лише
+  панель тайлів (`.leaflet-map-pane`), тож фон самого `#leftmap` теж примусово робиться
+  прозорим у режимі накладання — інакше він залишається непрозорим позаду приглушених
+  тайлів і блокує показ `#rightmap`.
