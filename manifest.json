@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "OldMaps.com.ua Magic Controls",
+  "name": "OldMaps.com.ua Magic Tools",
   "version": "0.1.0",
   "description": "Adds an extra controls panel to the oldmaps.com.ua map viewer.",
   "content_scripts": [
