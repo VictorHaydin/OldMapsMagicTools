@@ -1,0 +1,170 @@
+#omm-magic-button {
+  position: absolute;
+  top: 210px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  z-index: 800;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+}
+
+#omm-magic-button:hover {
+  background: rgb(247, 247, 247);
+}
+
+#omm-magic-panel {
+  position: absolute;
+  top: 250px;
+  right: 10px;
+  z-index: 800;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.65);
+  padding: 10px 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #000;
+}
+
+#omm-magic-panel[hidden] {
+  display: none;
+}
+
+.omm-panel-header {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.omm-panel-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.omm-panel-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.15);
+  margin: 10px 0;
+}
+
+.omm-panel-subheader {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.omm-opacity-row {
+  margin-top: 10px;
+}
+
+.omm-opacity-row label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.omm-opacity-row input[type="range"] {
+  width: 100%;
+}
+
+/* Overlay ("На ввесь екран") view mode */
+
+body.omm-overlay-mode #leftmap,
+body.omm-overlay-mode #rightmap {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body.omm-overlay-mode #leftmap {
+  z-index: 2 !important;
+  /* .leaflet-container's own opaque background paints behind the map-pane
+     we fade for the transparency slider; without this it blocks #rightmap
+     from showing through no matter how transparent the tiles get. */
+  background: transparent !important;
+}
+
+body.omm-overlay-mode #rightmap {
+  z-index: 1 !important;
+}
+
+body.omm-overlay-mode .line {
+  display: none !important;
+}
+
+/* Stack the two layer-selector toggle buttons vertically on the right edge */
+body.omm-overlay-mode #rightmap .leaflet-top.leaflet-right {
+  top: 124px !important;
+}
+
+/* The stacked layer buttons now occupy 58px-182px; push the info/home/magic
+   column further down so it doesn't overlap them. */
+body.omm-overlay-mode #info-button {
+  top: 192px !important;
+}
+
+body.omm-overlay-mode #home-button {
+  top: 232px !important;
+}
+
+body.omm-overlay-mode #omm-magic-button {
+  top: 272px !important;
+}
+
+body.omm-overlay-mode #omm-magic-panel {
+  top: 312px !important;
+}
+
+/* Layer-picker and attribution controls, detached from #leftmap/#rightmap
+   so they can render above the top map's opaque tiles (see floatControlsForOverlay). */
+.omm-float-layers {
+  position: fixed !important;
+  right: 10px !important;
+  left: auto !important;
+  margin: 0 !important;
+}
+
+.omm-float-layers-top {
+  top: 58px !important;
+}
+
+.omm-float-layers-bottom {
+  top: 124px !important;
+}
+
+.omm-float-attrib {
+  position: fixed !important;
+  right: 10px !important;
+  left: auto !important;
+  /* Restore styling that the site applies via ".leaflet-container
+     .leaflet-control-attribution" and inherited "font" on ".leaflet-container" -
+     both stop matching once this element is detached from its map div. */
+  background: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  padding: 0 5px;
+  font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  color: #333;
+}
+
+.omm-float-attrib-top {
+  bottom: 24px !important;
+  top: auto !important;
+}
+
+.omm-float-attrib-bottom {
+  bottom: 0 !important;
+  top: auto !important;
+}

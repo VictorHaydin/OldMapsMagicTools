@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "OldMaps.com.ua Magic Controls",
+  "version": "0.1.0",
+  "description": "Adds an extra controls panel to the oldmaps.com.ua map viewer.",
+  "content_scripts": [
+    {
+      "matches": ["https://oldmaps.com.ua/*"],
+      "css": ["content.css"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ]
+}
