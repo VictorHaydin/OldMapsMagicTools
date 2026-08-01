@@ -1,3 +1,5 @@
+Language: **English** | [Українська](README.uk.md)
+
 # OldMaps.com.ua Magic Controls
 
 A Chrome extension (Manifest V3) that adds an extra "Advanced settings" panel to the
