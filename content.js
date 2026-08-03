@@ -19,12 +19,6 @@
     panel.hidden = true;
     panel.innerHTML = `
       <div class="omm-panel-header">Розширені налаштування</div>
-      <label class="omm-panel-row">
-        <input type="checkbox" id="omm-toggle-center" checked>
-        <span>Показати центр</span>
-      </label>
-
-      <div class="omm-panel-divider"></div>
 
       <div class="omm-panel-subheader">Вигляд мапи</div>
       <label class="omm-panel-row">
@@ -61,10 +55,6 @@
       panel.hidden = true;
     });
 
-    panel.querySelector('#omm-toggle-center').addEventListener('change', (event) => {
-      setCentersVisible(event.target.checked);
-    });
-
     panel.querySelectorAll('input[name="omm-view-mode"]').forEach((radio) => {
       radio.addEventListener('change', (event) => {
         if (event.target.checked) setViewMode(event.target.value);
@@ -81,12 +71,6 @@
     setupOverlayResizeHandling();
     setupSiteModeConflictHandling();
     updateSiteModeConflictUI();
-  }
-
-  function setCentersVisible(visible) {
-    document.querySelectorAll('.mapcenter').forEach((el) => {
-      el.style.display = visible ? '' : 'none';
-    });
   }
 
   const OVERLAY_BODY_CLASS = 'omm-overlay-mode';
