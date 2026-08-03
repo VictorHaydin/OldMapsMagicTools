@@ -1,6 +1,8 @@
+/* top:250px sits one 40px slot below the site's own #crosshair-toggle-btn
+   (info@130, home@170, crosshair@210, ours@250) so we don't overlap it. */
 #omm-magic-button {
   position: absolute;
-  top: 210px;
+  top: 250px;
   right: 10px;
   width: 36px;
   height: 36px;
@@ -24,10 +26,11 @@
 
 #omm-magic-panel {
   position: absolute;
-  top: 250px;
+  top: 290px;
   right: 10px;
   z-index: 800;
   min-width: 220px;
+  max-width: 260px;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.65);
@@ -51,12 +54,6 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
-}
-
-.omm-panel-divider {
-  height: 1px;
-  background: rgba(0, 0, 0, 0.15);
-  margin: 10px 0;
 }
 
 .omm-panel-subheader {
@@ -133,8 +130,8 @@ body.omm-overlay-mode #rightmap .leaflet-top.leaflet-right {
   top: 124px !important;
 }
 
-/* The stacked layer buttons now occupy 58px-182px; push the info/home/magic
-   column further down so it doesn't overlap them. */
+/* The stacked layer buttons now occupy 58px-182px; push the info/home/
+   crosshair/magic column further down so it doesn't overlap them. */
 body.omm-overlay-mode #info-button {
   top: 192px !important;
 }
@@ -143,12 +140,16 @@ body.omm-overlay-mode #home-button {
   top: 232px !important;
 }
 
-body.omm-overlay-mode #omm-magic-button {
+body.omm-overlay-mode #crosshair-toggle-btn {
   top: 272px !important;
 }
 
-body.omm-overlay-mode #omm-magic-panel {
+body.omm-overlay-mode #omm-magic-button {
   top: 312px !important;
+}
+
+body.omm-overlay-mode #omm-magic-panel {
+  top: 352px !important;
 }
 
 /* Layer-picker and attribution controls, detached from #leftmap/#rightmap
