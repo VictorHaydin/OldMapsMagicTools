@@ -77,6 +77,30 @@
   width: 100%;
 }
 
+.omm-row-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.omm-hint {
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(163, 51, 51, 0.08);
+  border-left: 3px solid #a33;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #a33;
+}
+
+/* Applied to the site's own single/double-map toggle button while the
+   plugin's overlay mode is active, so both modes can never run at once. */
+.omm-native-disabled {
+  opacity: 0.4 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  filter: grayscale(60%);
+}
+
 /* Overlay ("На ввесь екран") view mode */
 
 body.omm-overlay-mode #leftmap,

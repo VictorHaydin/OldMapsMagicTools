@@ -36,6 +36,13 @@
         <span>На ввесь екран</span>
       </label>
 
+      <div class="omm-hint" id="omm-viewmode-hint" hidden>
+        Недоступно, поки на карті активний режим однієї карти сайту.
+        Перемкніться назад у режим двох карт (кнопка
+        <i class="far fa-window-maximize"></i> на карті), щоб скористатися цим
+        режимом.
+      </div>
+
       <div class="omm-opacity-row" id="omm-opacity-row" hidden>
         <label for="omm-opacity-slider">Прозорість <span id="omm-opacity-value">100%</span></label>
         <input type="range" id="omm-opacity-slider" min="0" max="100" value="100">
@@ -72,6 +79,8 @@
     });
 
     setupOverlayResizeHandling();
+    setupSiteModeConflictHandling();
+    updateSiteModeConflictUI();
   }
 
   function setCentersVisible(visible) {
@@ -81,8 +90,20 @@
   }
 
   const OVERLAY_BODY_CLASS = 'omm-overlay-mode';
+  const SITE_SINGLE_MAP_CLASS = 'one-map';
 
   function setViewMode(mode) {
+    // The site's own single-map mode hides #rightmap entirely; overlaying it
+    // on top of #leftmap makes no sense there, so refuse to switch.
+    if (mode === 'overlay' && isSiteInSingleMapMode()) {
+      mode = 'side';
+    }
+
+    const sideRadio = document.getElementById('omm-view-side');
+    const overlayRadio = document.getElementById('omm-view-overlay');
+    if (sideRadio) sideRadio.checked = mode !== 'overlay';
+    if (overlayRadio) overlayRadio.checked = mode === 'overlay';
+
     const opacityRow = document.getElementById('omm-opacity-row');
     if (mode === 'overlay') {
       document.body.classList.add(OVERLAY_BODY_CLASS);
@@ -96,6 +117,56 @@
       restoreControlsFromOverlay();
     }
     invalidateMapsSoon();
+    updateSiteModeConflictUI();
+  }
+
+  function isSiteInSingleMapMode() {
+    return document.body.classList.contains(SITE_SINGLE_MAP_CLASS);
+  }
+
+  function getNativeSingleMapButton() {
+    return window.doubleButton && window.doubleButton.button ? window.doubleButton.button : null;
+  }
+
+  // Keeps the plugin's overlay mode and the site's own single-map mode from
+  // ever being active at the same time, in either direction.
+  function updateSiteModeConflictUI() {
+    const overlayRadio = document.getElementById('omm-view-overlay');
+    const hint = document.getElementById('omm-viewmode-hint');
+    const singleMapActive = isSiteInSingleMapMode();
+    const overlayActive = document.body.classList.contains(OVERLAY_BODY_CLASS);
+
+    if (overlayRadio) {
+      overlayRadio.disabled = singleMapActive;
+      const row = overlayRadio.closest('.omm-panel-row');
+      if (row) row.classList.toggle('omm-row-disabled', singleMapActive);
+    }
+    if (hint) hint.hidden = !singleMapActive;
+
+    // Site got switched to single-map (e.g. via its own button) while our
+    // overlay mode was active - revert to side-by-side to avoid a broken mix.
+    if (singleMapActive && overlayActive) {
+      setViewMode('side');
+      return;
+    }
+
+    const nativeButton = getNativeSingleMapButton();
+    if (!nativeButton) return;
+    if (overlayActive) {
+      if (nativeButton.dataset.ommOrigTitle === undefined) {
+        nativeButton.dataset.ommOrigTitle = nativeButton.title;
+      }
+      nativeButton.title = 'Недоступно в режимі "На ввесь екран" плагіна. Спочатку вимкніть цей режим у налаштуваннях плагіна.';
+    } else if (nativeButton.dataset.ommOrigTitle !== undefined) {
+      nativeButton.title = nativeButton.dataset.ommOrigTitle;
+      delete nativeButton.dataset.ommOrigTitle;
+    }
+    nativeButton.classList.toggle('omm-native-disabled', overlayActive);
+  }
+
+  function setupSiteModeConflictHandling() {
+    const observer = new MutationObserver(() => updateSiteModeConflictUI());
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
 
   // #leftmap and #rightmap each create their own stacking context; once both
