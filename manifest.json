@@ -2,12 +2,19 @@
   "manifest_version": 3,
   "name": "OldMaps.com.ua Magic Tools",
   "version": "0.1.0",
-  "description": "Adds an extra controls panel to the oldmaps.com.ua map viewer.",
+  "description": "Extra controls for the oldmaps.com.ua map viewer, plus full-resolution map downloads on uma.lvivcenter.org.",
   "content_scripts": [
     {
       "matches": ["https://oldmaps.com.ua/*"],
       "css": ["content.css"],
       "js": ["content.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://uma.lvivcenter.org/*"],
+      "css": ["uma-content.css"],
+      "js": ["uma-content.js"],
       "run_at": "document_idle",
       "world": "MAIN"
     }

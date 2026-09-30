@@ -1,0 +1,58 @@
+/* Positioned directly below the site's own .zoomify-close button
+   (position:fixed; right:15px; top:15px; width:45px; height:45px),
+   matching its size/colors for visual consistency. */
+#omm-uma-download-btn {
+  position: fixed;
+  right: 15px;
+  top: 70px;
+  width: 45px;
+  height: 45px;
+  background: #292c2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+#omm-uma-download-btn .omm-uma-icon {
+  width: 22px;
+  height: 22px;
+  fill: #b7bbbc;
+  transition: fill 0.3s, opacity 0.3s;
+}
+
+#omm-uma-download-btn:hover .omm-uma-icon {
+  fill: #fff;
+}
+
+#omm-uma-download-btn.omm-busy {
+  cursor: progress;
+}
+
+#omm-uma-download-btn.omm-busy .omm-uma-icon {
+  opacity: 0.35;
+}
+
+#omm-uma-download-btn.omm-done .omm-uma-icon {
+  fill: #4caf50;
+}
+
+/* Thin progress bar along the bottom edge while tiles are downloading. */
+#omm-uma-download-btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background: #4caf50;
+}
+
+#omm-uma-download-btn.omm-busy::after {
+  width: var(--omm-progress, 0%);
+  transition: width 0.15s linear;
+}
